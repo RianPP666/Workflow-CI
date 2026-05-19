@@ -51,6 +51,10 @@ jobs:
     - name: Build Docker Model
       run: |
         cd MLProject
+        
+        # HOTFIX: Memperbaiki bug bawaan MLflow 2.19.0 terkait URL pip untuk Python 3.9
+        find /opt/hostedtoolcache/Python -name docker_utils.py -exec sed -i 's|https://bootstrap.pypa.io/get-pip.py|https://bootstrap.pypa.io/pip/3.9/get-pip.py|g' {} +
+        
         mlflow models build-docker -m "mlruns/0/${{ env.RUN_ID }}/artifacts/model" -n "${{ secrets.DOCKER_USERNAME }}/workflow-ci:latest"
         
     - name: Log in to Docker Hub
